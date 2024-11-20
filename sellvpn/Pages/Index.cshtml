@@ -1,0 +1,141 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "فروش سریع فیلترشکن";
+}
+
+<div class="text-center">
+    <h3 class=" text-warning my-4">فروش سریع فیلترشکن</h3>
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 px-5 py-2 ">
+            <div class="row col-12 px-0 mx-0">
+                <select class="form-control form-control-lg ">
+                    <option value="">بسته خود را انتخاب کنید...</option>
+                    <option value="01">10 گیگ 30 هزار تومان</option>
+                    <option value="02">20 گیگ 60 هزار تومان</option>
+                    <option value="03">30 گیگ 80 هزار تومان</option>
+                    <option value="04">40 گیگ 90 هزار تومان</option>
+                    <option value="05">50 گیگ 100 هزار تومان</option>
+                    <option value="06">60 گیگ 120 هزار تومان</option>
+                    <option value="07">70 گیگ 140 هزار تومان</option>
+                    <option value="08">80 گیگ 160 هزار تومان</option>
+                    <option value="09">90 گیگ 180 هزار تومان</option>
+                    <option value="10">100 گیگ 200 هزار تومان</option>
+                    <option value="20">200 گیگ 400 هزار تومان</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-3 px-5 py-2">
+            <button type="button" class="btn btn-primary btn-lg w-100" id="view">پرداخت و دریافت اکانت</button>
+        </div>
+    </div>
+    <div class="text-right">
+        <h3 class=" text-warning my-4">چرا سرویس فیلترشکن ما:</h3>
+        <ul style="line-height:2">
+            <li>اتصال با تمامی اپراتورهای اینترنت ثابت و موبایل (همراه اول، ایرانسل، مخابرات، مبین نت و  ....)</li>
+            <li>بدون محدودیت کاربر (چند کاربره، یک تا 100 نفر همزمان)</li>
+            <li> برای  آیفون / اندروید / ویندوز (اشتراک برای تمامی سرویس ها یکسان است)</li>
+            <li>اشتراک ها یک ساله می باشند.</li>
+            <li>ضمانت بازگشت وجه در صورت عدم اتصال</li>
+            <li>پشتیبانی تا روز آخر</li>
+            <li>اشتراک لوکیشن ثابت (ای پی ثابت)</li>
+            <li>
+                لوکیشن های  مختلف از آسیا، آمریکا و اروپا (همه اشتراک ها بدون محدودیت 10 لوکیشن را دریافت میکنند )
+                <br />ترکیه، فرانسه، انگلیس، آمریکا، کانادا، امارات، هلند، فنلاند، روسیه و آلمان
+            </li>
+            <li>50 کانفیگ مختلف برای هر اکانت <br />
+                سرویس ما به صورت تانل می باشد تا با حداکثر سرعت اتصال شما را برقرار کند
+                <br />
+                سرور های ایران از دیتاسنترهای مختلف ایرانسل، آسیاتک، شاتل، پارس آنلاین، کلود ایران، و ... می باشد
+                <br />
+                تمامی کانفیگ ها در همان ابتدا برای شما فعال می باشد
+                <br />
+                تمامی موارد بالا اطمینان 99  درصدی اتصال شما را می دهد.
+                </li>
+                <li>
+                    مناسب وب گردی،یوتیوب، بازی آنلاین
+                </li>
+            <li>مناسب برای ترید ارز های دیجیتال و فارکس</li>
+            <li> بهترین قیمت</li>
+            <li> پر سرعت</li>
+            <li>تحویل آنی</li>
+            <li>اطلاعات پشتیبانی بعد از خرید برای شما ارسال می شود.</li>
+        </ul>
+    </div>
+    @* <div class="row justify-content-center">
+    <div class="col-md-6 px-5 py-2 ">
+    <div class="row col-12 px-0 mx-0">
+    <input type="number" name="mobile" id="mobile" class="form-control form-control-lg text-center" dir="ltr" placeholder="شماره موبایل را وارد نمایید" />
+    </div>
+    </div>
+    </div> *@
+</div>
+@section Scripts {
+    <script>
+        
+        $(document).ready(function () {
+            $('#view').click(function (e) {
+
+
+                    $.ajax({
+                        url: '/Index?handler=Pay&id=' + $('#id').val(),
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.title != null) {
+                                $("#tblStatus").removeClass("d-none");
+                                //if (response.Enable == false ) {
+                                //    $("#pay").removeClass("d-none");
+
+                                //}
+                                if (response.expiredTime == true && response.enable == false) {
+                                    $("#pay").removeClass("d-none");
+                                    $("#expiredTime").removeClass("d-none");
+                                }
+                                else if (response.unUsed < 0.01 && response.enable == false) {
+                                    $("#pay").removeClass("d-none");
+                                    $("#treffic").removeClass("d-none");
+                                }
+                                else if (response.unUsed < 1 && response.total > 0 && response.used > 0) {
+                                    $("#pay").removeClass("d-none");
+                                    $("#lowtreffic").removeClass("d-none");
+                                }
+
+                                // Access specific properties
+                                $("#Title").text(response.title);
+                                $("#ExpiryTime").text(response.expiryTime);
+                                $("#Last").text(response.last);
+                                if (response.total == 0) {
+                                    $("#Total").text("حجم اولیه چند ساعت دیگر تنظیم می شود.");
+                                }
+                                else {
+                                    $("#Total").text(response.total + " گیگابایت");
+                                }
+
+                                $("#Used").text(response.used.toFixed(2));
+                                $("#UnUsed").text(response.unUsed.toFixed(2));
+                            }
+                            else {
+
+                                $('#id').addClass('is-invalid');
+                                $("#alert").removeClass("d-none");
+                            }
+                            // ...and so on
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error here
+                            console.log("Error:", error);
+
+                        }
+                    });
+               
+            });
+
+         
+        })
+    </script>
+}
